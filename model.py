@@ -103,7 +103,7 @@ class Model:
                                                 self.hps.adv_loss_weight, epoch=i)
 
     def train_GAN(self):
-
+        log = open("loss_history.txt", 'w')
         # Optimizers
         optimizer_G = torch.optim.Adam(self.generator.parameters(), lr=self.hps.lr)
         optimizer_D = torch.optim.Adam(self.discriminator.parameters(), lr=self.hps.lr)
@@ -155,7 +155,7 @@ class Model:
             loss_D.backward()
             optimizer_D.step()
 
-            print('epoch', i, 'generator loss', loss_G.item(), 'discriminator loss', loss_D.item())
+            print('epoch', i, 'generator loss', loss_G.item(), 'discriminator loss', loss_D.item(), file = log)
             if (i % 100 == 0):
                 torch.save(self,
                            self.hps.model_path.format(self.dataset_name, self.hps.tau, self.hps.adv_loss_weight))
