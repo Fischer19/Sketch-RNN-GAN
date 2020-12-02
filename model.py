@@ -17,7 +17,7 @@ class Model:
         self.dataset_name = dataset_name
         self.generator = Generator().cuda()
         self.discriminator = Discriminator().cuda()
-        self.data = np.load(self.hps.data_path.format(self.dataset_name), encoding='latin1')["train"]
+        self.data = np.load(self.hps.data_path.format(self.dataset_name), encoding='latin1', allow_pickle = True)["train"]
         self.data_loader = DataLoader(self.data)
         self.N_max = self.data_loader.N_max
 
@@ -93,7 +93,7 @@ class Model:
             loss.backward()
             optimizer.step()
 
-            print('epoch', i, 'reconstruction loss', loss.data[0])
+            print('epoch', i, 'reconstruction loss', loss.item())
             if (i % 100 == 0):
                 torch.save(self,
                            self.hps.model_path.format("rnn_only_" + self.dataset_name, self.hps.tau,
@@ -155,7 +155,7 @@ class Model:
             loss_D.backward()
             optimizer_D.step()
 
-            print('epoch', i, 'generator loss', loss_G.data[0], 'discriminator loss', loss_D.data[0])
+            print('epoch', i, 'generator loss', loss_G.item(), 'discriminator loss', loss_D.item())
             if (i % 100 == 0):
                 torch.save(self,
                            self.hps.model_path.format(self.dataset_name, self.hps.tau, self.hps.adv_loss_weight))
